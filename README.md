@@ -15,5 +15,5 @@
 
 ## Repository Branches
 - main: the inaccessible code
-- dialog: the reworked code making the popup accessible using the html <dialog> element
-- div: the reworked code making the popup accessible using html <div> element
+- dialog: the reworked code making the popup accessible using the html `<dialog>` element
+- div: the reworked code making the popup accessible using html `<div>` element
