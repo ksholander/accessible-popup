@@ -78,25 +78,26 @@ class Popup
         $class = (\get_current_screen()) ? 'popup-editor' : 'popup';
 
 ?>
-        <!-- popup open button -->
         <div class="wp-block-buttons is-layout-flex">
             <div class="wp-block-button">
-                <a id="<?= $id ?>-button" 
-                   class="wp-block-button__link wp-element-button popup-open-button" 
-                   data-popup="popup-<?= $id ?>">
+                <button 
+                   id="<?= $id ?>-button" 
+                   aria-haspopup="dialog" 
+                   aria-expanded="false" 
+                   aria-controls="popup-<?= $id ?>"
+                   class="wp-block-button__link wp-element-button popup-open-button">
                     <?= $label ?>
-                </a>
+                </button>
             </div>
         </div>
 
-        <!-- popup -->
-        <div class="<?= $class ?>" id="popup-<?= $id ?>">
-            <button class='close-popup-button'>&times;</button>
+        <dialog class="<?= $class ?>" id="popup-<?= $id ?>" title="Dialog popup">
+            <button autofocus class='close-popup-button' aria-label="close popup">&times;</button>
             <p class='instructions'>Build your popup here:</p>
             <div class="popup-content">
                 <InnerBlocks templateLock="false" />
             </div>
-        </div>
+        </dialog>
 <?php
     }
 }

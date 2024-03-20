@@ -1,34 +1,18 @@
 .popup {
-    display: none;
-    position: fixed;
-    width: 50vw;
-    height: 33svh;
-    top: 10svh;
-    left: 25vw;
-    z-index: 1000;
+    margin-top: 10svh;
+        border: 0.125rem solid black;
+        border-radius: 0.5rem;
+        padding: 0;
 
     .popup-content {
         position: relative;
-        border: 0.125rem solid black;
-        border-radius: 0.5rem;
         background-color: white;
         z-index: 1001;
     }
 
-    &.open {
-        display: block;
-    }
-
-    &.open::before {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    &::backdrop {
         background-color: #aaaaaa;
         opacity: 0.4;
-        content: "";
-        z-index: 999;
     }
 
     .close-popup-button {
