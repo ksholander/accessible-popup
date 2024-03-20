@@ -81,17 +81,19 @@ class Popup
         <!-- popup open button -->
         <div class="wp-block-buttons is-layout-flex">
             <div class="wp-block-button">
-                <a id="<?= $id ?>-button" 
+                <button id="<?= $id ?>-button" 
                    class="wp-block-button__link wp-element-button popup-open-button" 
-                   data-popup="popup-<?= $id ?>">
+                   aria-haspopup="dialog"
+                   aria-expanded="false"
+                   aria-controls="popup-<?= $id ?>">
                     <?= $label ?>
-                </a>
+                </button>
             </div>
         </div>
 
         <!-- popup -->
-        <div class="<?= $class ?>" id="popup-<?= $id ?>">
-            <button class='close-popup-button'>&times;</button>
+        <div class="<?= $class ?>" id="popup-<?= $id ?>" title="Popup dialog">
+            <button class='close-popup-button' aria-label='Close popup'>&times;</button>
             <p class='instructions'>Build your popup here:</p>
             <div class="popup-content">
                 <InnerBlocks templateLock="false" />
