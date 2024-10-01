@@ -1,19 +1,29 @@
 # Custom ACF Gutenberg Popup Block
 
 ## Basic Components
+
 - Button that when clicked opens the dialog
 - Dialog container with interactive content
 
-## Accessibility Issues
-- Keyboard navigation doesn't work to get to open button
-- Open button does not have proper aria properties to indicate it's function
-- Clicking button does not properly direct focus into popup
-- Using keyboard to navigate - focus leaves popup after last element
-- Close button has no accessible label
-- Dialog does not have a title
-- Keyboard controls don't work (esc key should close popup)
+## Accessibility Considerations
 
-## Repository Branches
-- main: the inaccessible code
-- dialog: the reworked code making the popup accessible using the html `<dialog>` element
-- div: the reworked code making the popup accessible using html `<div>` element
+- Use of semantic HTML for buttons and dialog
+- Proper labelling of buttons, especially those that only contain icons
+- Proper labeling of dialog element
+- Addition of ARIA properties to indicate presence of a popup
+- Maintaining ARIA states to indicate current state of the popup
+- Keyboard controls work to open and close popup
+- Focus is trapped in modal when open
+
+## ACF Features
+
+- Button label controlled through ACF field
+- Popup title controlled through ACF field
+
+## Gutenberg Features
+
+- Allows setting of anchor id
+- Allows for additional HTML classes
+- Padding styling can be set on popup container
+- Innerblocks allow for adding Gutenberg blocks into the container in the editor
+ 

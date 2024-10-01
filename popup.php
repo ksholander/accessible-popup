@@ -3,100 +3,134 @@
 namespace CG_Blocks;
 
 /**
- * This class builds an ACF custom Gutenberg Block.
- * The block consists of a button with a label that can be set with an ACF field
- * and a popup container which supports innerblocks for building out the popup content
- *
- * The register_block method is used to setup the block configuration and register it
- * with ACF
- * The display_block method is used to generate the html of the block from the supplied
- * settings
+ * Implements an ACF custom block for an accessible popup.
+ * @link https://www.advancedcustomfields.com/resources/blocks/
  */
-
 class Popup
 {
     private static $obj = null;
 
+    /**
+     * This function will create a singleton object of the class
+     * if one does not already exist.
+     * @return Popup
+     */
     public static function init()
     {
         if (!isset(self::$obj)) {
             self::$obj = new self();
         }
+        return self::$obj;
     }
 
     private final function __construct()
     {
-        $this->register_block();
-    }
-
-    /**
-     * register_block
-     * method to define the configuration of the block
-     * and register it using acf_register_block_type()
-     */
-    protected function register_block()
-    {
-        add_action('acf/init', function () {
-            if (function_exists('acf_register_block_type')) {
-                acf_register_block_type([
-                    'name'          => 'cg-popup',
-                    'title'         => 'popup',
-                    'description'   => 'adds a button and connected popup',
-                    'render_callback' => [$this, 'display_block'],
-                    'category'      => 'codegeek',
-                    'icon'          => 'page',
-                    'keywords'      => ['popup', 'button'],
-                    'mode'          => 'preview',
-                    'supports'      => [
-                        'align'     => false,
-                        'anchor'    => false,
-                        'customClassName' => false,
-                        'jsx'       => true,
-                    ]
-                ]);
-            }
+        // register the block with WordPress
+        add_action('init', function () {
+            register_block_type(__DIR__);
         });
+
+        // register the JSON file for ACF
+        add_filter('acf/settings/load_json', [$this, 'acf_register_json_files'], 10, 1);
     }
 
     /**
-     * display_block
-     * method to render the block html using the supplied settings
+     * Register the JSON files for ACF
      */
-    public function display_block($block, $content = '', $is_preview = false, $post_id = 0)
+    function acf_register_json_files($paths): array
     {
-        global $post;
+        $paths[] = __DIR__ . '/acf-json';
+        return $paths;
+    }
 
-        $id = wp_unique_id();
-        $label = get_field('button_label');
-
-        /* determine whether to display the block as backend editor or frontend */
-        /* the popup contents are obviously hidden on the frontend, but we need */
-        /* to make the popup visible on the backend so its contents can be edited */
-        if (!function_exists('\get_current_screen')) {
-            require_once ABSPATH . '/wp-admin/includes/screen.php';
+    /**
+     * Decode the spacing settings from Gutenberg
+     * spacing value can either be a css variable or it can be absolute css numbers
+     * @param string $spacing - spacing value from gutenberg
+     * @return string
+     **/
+    private function decodeSpacing($spacing) {
+        preg_match("/^var:preset\|([^|]*)\|([^|]*)$/", $spacing, $matches);
+        if ($matches) {
+            // if it is a variable then return the variable
+            return "var(--wp--preset--" . $matches[1] . "--" . $matches[2] . ")";
         }
-        $class = (\get_current_screen()) ? 'popup-editor' : 'popup';
+        // not a variable so just pass the value through
+        return $spacing;
+    }
 
+    /**
+     * This is the render function for the block.
+     * It will add the button and the popup to the page.
+     * @param array $block The block settings and attributes
+     * @param string $content The block content
+     * @param bool $is_preview True during AJAX preview
+     * @param int $post_id The post ID
+     * @param array $context The context
+     */
+    public function display_block($block, $content = '', $is_preview = false, $post_id = 0, $context = [])
+    {
+        $id = !empty($block['anchor']) ? $block['anchor'] : wp_unique_id();
+        $class = 'popup ';
+        $class .= !empty($block['className']) ? $block['className'] : "";
+        $class .= $is_preview ? ' popup-editor' : '';
+        $label = get_field('button_label');
+        $title = get_field('popup_title') ?? "Accessible Popup";
+
+        $style = "";
+        if (!empty($block['style']['spacing']['padding'])) {
+            $padding = $block['style']['spacing']['padding'];
+            foreach($padding as $side => $spacing) {
+                $style .= "padding-{$side}: " . $this->decodeSpacing($spacing) . ";";
+            }
+        }
 ?>
-        <!-- popup open button -->
         <div class="wp-block-buttons is-layout-flex">
             <div class="wp-block-button">
-                <a id="<?= $id ?>-button" 
-                   class="wp-block-button__link wp-element-button popup-open-button" 
-                   data-popup="popup-<?= $id ?>">
+                <button
+                   id="<?= $id ?>-button" 
+                   aria-haspopup="dialog" 
+                   aria-expanded="false" 
+                   aria-controls="popup-<?= $id ?>"
+                   class="wp-block-button__link wp-element-button popup-open-button">
                     <?= $label ?>
-                </a>
+                </button>
             </div>
         </div>
 
-        <!-- popup -->
-        <div class="<?= $class ?>" id="popup-<?= $id ?>">
-            <button class='close-popup-button'>&times;</button>
-            <p class='instructions'>Build your popup here:</p>
-            <div class="popup-content">
+        <dialog 
+            id="popup-<?= $id ?>" 
+            class="<?= $class ?>" 
+            aria-labelledby="<?= $id ?>-title" 
+            <?= $is_preview ? " open='true'" : "" ?>>
+            <button autofocus class='close-popup-button' aria-label="close popup">
+                <svg aria-hidden="true" fill="#000000" height="24px" width="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 512 512" xml:space="preserve">
+                    <g>
+                        <g>
+                            <polygon points="512,59.076 452.922,0 256,196.922 59.076,0 0,59.076 196.922,256 0,452.922 59.076,512 256,315.076 452.922,512
+                                512,452.922 315.076,256         "/>
+                        </g>
+                    </g>
+                </svg>
+            </button>
+            <?php
+            if (!$is_preview) {
+                ?>
+                <h2 id="<?= $id ?>-title" class='popup-title'><?= $title ?></h2>
+                <?php
+            } else {
+                ?>
+                <h2 id="<?= $id ?>-title" class='popup-title'>Build your popup here:</h2>
+                <?php
+            }
+            ?>
+            <div 
+                class="popup-content"
+                style="<?= $style ?> ">
                 <InnerBlocks templateLock="false" />
             </div>
-        </div>
+        </dialog>
 <?php
     }
 }

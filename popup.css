@@ -1,0 +1,42 @@
+.popup {
+    margin-top: 10svh;
+    border: 0.125rem solid black;
+    border-radius: 0.5rem;
+    padding: 0;
+
+    &::backdrop {
+        background-color: #aaaaaa;
+        opacity: 0.4;
+    }
+
+    .popup-content {
+        position: relative;
+        background-color: white;
+    }
+
+    .close-popup-button {
+        position: absolute;
+        padding: 2px 0;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 2rem;
+        height: 2rem;
+        z-index: 2;
+    }
+
+    .popup-title {
+        padding: 1.125rem 1rem;
+        background-color: var(--wp--preset--color--accent);
+        color: white;
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.25rem;
+        text-align: center;
+    }
+}
+
+.popup-editor {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+}

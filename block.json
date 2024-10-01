@@ -1,0 +1,22 @@
+{
+    "name": "cg_popup",
+    "title": "Accessible Popup",
+    "description": "Adds a button that opens a popup",
+    "category": "codegeek",
+    "icon": "admin-page",
+    "keywords": ["popup", "accessible", "button"],
+    "viewScript": ["file:./popup.js"],
+    "style": "file:./popup.css",
+    "acf": {
+        "renderTemplate": "render.php",
+        "mode": "preview"
+    },
+    "supports": {
+        "anchor": true,
+        "customClassName": true,
+        "spacing": {
+            "padding": true
+        },
+        "jsx": true
+    }
+}
