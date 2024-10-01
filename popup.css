@@ -35,6 +35,10 @@
     }
 }
 
+.wp-block-buttons:has(.popup-open-button[aria-expanded="true"]) ~ .popup {
+    display: block;
+}
+
 .popup-editor {
     display: block;
     position: relative;
