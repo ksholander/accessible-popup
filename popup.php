@@ -31,16 +31,9 @@ class Popup
         });
 
         // register the JSON file for ACF
-        add_filter('acf/settings/load_json', [$this, 'acf_register_json_files'], 10, 1);
-    }
-
-    /**
-     * Register the JSON files for ACF
-     */
-    function acf_register_json_files($paths): array
-    {
-        $paths[] = __DIR__ . '/acf-json';
-        return $paths;
+        add_filter('acf/settings/load_json', function ($paths) {
+            $paths[] = __DIR__ . '/acf-json';
+        }, 10, 1);
     }
 
     /**
