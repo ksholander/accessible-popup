@@ -33,6 +33,7 @@ class Popup
         // register the JSON file for ACF
         add_filter('acf/settings/load_json', function ($paths) {
             $paths[] = __DIR__ . '/acf-json';
+            return $paths;
         }, 10, 1);
     }
 
