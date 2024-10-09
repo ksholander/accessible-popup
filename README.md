@@ -29,8 +29,8 @@
  
 ## Using the Block
 
-- Add the code to your theme or plugin
-- Add `require_once __DIR__ . "/plugin/plugin.php"` to your functions.php or plugin php code
+- Clone the code to your theme or plugin
+- Add `require_once __DIR__ . "/accessible-popup/popup.php"` to your functions.php or plugin php code
 - Insert the block in the block or page editor
 - Add button label and popup title using ACF fields
 - Add content to the popup using the editor tools
